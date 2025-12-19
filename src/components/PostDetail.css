@@ -1,0 +1,126 @@
+.post-detail-container {
+  width: 100%;
+}
+
+.detail-header {
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #667eea;
+}
+
+.detail-header h2 {
+  color: #333;
+  font-size: 28px;
+  margin-bottom: 15px;
+}
+
+.detail-info {
+  display: flex;
+  gap: 20px;
+  color: #666;
+  font-size: 14px;
+}
+
+.detail-info span {
+  display: flex;
+  align-items: center;
+}
+
+.detail-content {
+  min-height: 300px;
+  padding: 30px 0;
+  line-height: 1.8;
+  color: #333;
+  font-size: 16px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.detail-actions {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 30px;
+  border-top: 1px solid #dee2e6;
+}
+
+.detail-actions > div {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-back {
+  background: #6c757d;
+  color: white;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.2s;
+}
+
+.btn-back:hover {
+  background: #5a6268;
+}
+
+.btn-edit {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-edit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.detail-actions .btn-delete {
+  background: #dc3545;
+  color: white;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.2s;
+}
+
+.detail-actions .btn-delete:hover {
+  background: #c82333;
+}
+
+@media (max-width: 768px) {
+  .detail-header h2 {
+    font-size: 22px;
+  }
+
+  .detail-info {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .detail-content {
+    font-size: 15px;
+    min-height: 200px;
+  }
+
+  .detail-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .detail-actions > div {
+    width: 100%;
+  }
+
+  .btn-back,
+  .btn-edit,
+  .detail-actions .btn-delete {
+    width: 100%;
+  }
+}

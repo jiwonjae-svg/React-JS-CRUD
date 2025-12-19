@@ -1,0 +1,24 @@
+.app {
+  min-height: 100vh;
+  padding: 40px 20px;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  padding: 40px;
+  min-height: 600px;
+}
+
+@media (max-width: 768px) {
+  .app {
+    padding: 20px 10px;
+  }
+
+  .container {
+    padding: 20px;
+  }
+}
