@@ -29,7 +29,8 @@ form {
 }
 
 .form-group input,
-.form-group textarea {
+.form-group textarea,
+.form-group select {
   padding: 12px 16px;
   border: 2px solid #dee2e6;
   border-radius: 6px;
@@ -39,7 +40,8 @@ form {
 }
 
 .form-group input:focus,
-.form-group textarea:focus {
+.form-group textarea:focus,
+.form-group select:focus {
   outline: none;
   border-color: #667eea;
 }
@@ -54,6 +56,67 @@ form {
   min-height: 200px;
 }
 
+.file-info {
+  font-size: 13px;
+  color: #666;
+  margin-top: 8px;
+  margin-bottom: 0;
+}
+
+.media-preview-section {
+  margin: 25px 0;
+}
+
+.media-preview-section h4 {
+  color: #555;
+  font-size: 16px;
+  margin-bottom: 15px;
+}
+
+.media-preview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+.media-preview-item {
+  position: relative;
+  border: 2px solid #dee2e6;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #f8f9fa;
+  aspect-ratio: 16/9;
+}
+
+.media-preview-item img,
+.media-preview-item video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.btn-remove-media {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 30px;
+  height: 30px;
+  background: rgba(220, 53, 69, 0.9);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.btn-remove-media:hover {
+  background: rgba(200, 35, 51, 1);
+}
+
 .form-actions {
   display: flex;
   gap: 12px;
@@ -61,8 +124,8 @@ form {
   padding-top: 20px;
 }
 
-.btn-cancel {
-  background: #6c757d;
+.btn-cancel,
+.btn-submit {
   color: white;
   border: none;
   padding: 12px 32px;
@@ -70,7 +133,12 @@ form {
   cursor: pointer;
   font-size: 16px;
   font-weight: 600;
-  transition: background-color 0.2s;
+  transition: all 0.2s;
+  min-width: 120px;
+}
+
+.btn-cancel {
+  background: #6c757d;
 }
 
 .btn-cancel:hover {
@@ -79,14 +147,6 @@ form {
 
 .btn-submit {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  border: none;
-  padding: 12px 32px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 16px;
-  font-weight: 600;
-  transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .btn-submit:hover {

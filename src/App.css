@@ -1,11 +1,51 @@
 .app {
   min-height: 100vh;
-  padding: 40px 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.guest-banner {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 12px 20px;
+  text-align: center;
+  color: #333;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.btn-login-banner {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 6px 18px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  transition: transform 0.2s;
+}
+
+.btn-login-banner:hover {
+  transform: translateY(-2px);
+}
+
+.main-layout {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px;
+  display: flex;
+  gap: 30px;
+}
+
+.content-area {
+  flex: 1;
+  min-width: 0;
 }
 
 .container {
-  max-width: 1200px;
-  margin: 0 auto;
   background: white;
   border-radius: 12px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
@@ -13,9 +53,19 @@
   min-height: 600px;
 }
 
+@media (max-width: 1024px) {
+  .main-layout {
+    flex-direction: column;
+  }
+}
+
 @media (max-width: 768px) {
   .app {
-    padding: 20px 10px;
+    padding: 0;
+  }
+
+  .main-layout {
+    padding: 10px;
   }
 
   .container {
