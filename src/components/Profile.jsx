@@ -3,7 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import './Profile.css';
 
 function Profile({ onClose }) {
-  const { currentUser, updateProfile } = useAuth();
+  const { currentUser, updateProfile, logout } = useAuth();
   const [formData, setFormData] = useState({
     username: currentUser.username,
     email: currentUser.email,
@@ -22,6 +22,48 @@ function Profile({ onClose }) {
     }));
     setError('');
     setMessage('');
+  };
+
+  const handleDeleteAccount = () => {
+    if (!window.confirm('정말로 회원탈퇴하시겠습니까? 모든 데이터가 삭제되며 복구할 수 없습니다.')) {
+      return;
+    }
+
+    const password = window.prompt('비밀번호를 입력하세요:');
+    if (!password) {
+      return;
+    }
+
+    if (password !== currentUser.password) {
+      alert('비밀번호가 일치하지 않습니다.');
+      return;
+    }
+
+    try {
+      // 사용자 삭제
+      const users = JSON.parse(localStorage.getItem('users') || '[]');
+      const updatedUsers = users.filter(u => u.id !== currentUser.id);
+      localStorage.setItem('users', JSON.stringify(updatedUsers));
+
+      // 해당 사용자의 게시글, 댓글 삭제
+      const posts = JSON.parse(localStorage.getItem('posts') || '[]');
+      const updatedPosts = posts
+        .filter(p => p.author !== currentUser.username)
+        .map(p => ({
+          ...p,
+          comments: p.comments.filter(c => c.author !== currentUser.username)
+        }));
+      localStorage.setItem('posts', JSON.stringify(updatedPosts));
+
+      // 자동 로그인 토큰 삭제
+      localStorage.removeItem('autoLoginToken');
+
+      alert('회원탈퇴가 완료되었습니다.');
+      logout();
+      onClose();
+    } catch (err) {
+      alert('회원탈퇴 중 오류가 발생했습니다.');
+    }
   };
 
   const handleSubmit = (e) => {
@@ -149,6 +191,14 @@ function Profile({ onClose }) {
             </button>
           </div>
         </form>
+
+        <div className="danger-zone">
+          <h3>위험 구역</h3>
+          <p>회원탈퇴 시 모든 데이터가 삭제되며 복구할 수 없습니다.</p>
+          <button type="button" className="btn-delete-account" onClick={handleDeleteAccount}>
+            회원탈퇴
+          </button>
+        </div>
       </div>
     </div>
   );

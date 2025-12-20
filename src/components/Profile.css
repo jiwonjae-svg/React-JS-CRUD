@@ -118,6 +118,7 @@
   display: flex;
   gap: 12px;
   margin-top: 25px;
+  justify-content: flex-end;
 }
 
 .btn-cancel,
@@ -132,6 +133,10 @@
   font-weight: 600;
   transition: all 0.2s;
   min-width: 120px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .btn-cancel {
@@ -149,6 +154,44 @@
 .btn-submit:hover {
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.danger-zone {
+  margin-top: 30px;
+  padding: 20px;
+  border: 2px solid #ff6b6b;
+  border-radius: 8px;
+  background-color: #fff5f5;
+}
+
+.danger-zone h3 {
+  margin: 0 0 10px 0;
+  color: #ff6b6b;
+  font-size: 16px;
+}
+
+.danger-zone p {
+  margin: 0 0 15px 0;
+  color: #666;
+  font-size: 13px;
+}
+
+.btn-delete-account {
+  width: 100%;
+  background: #ff6b6b;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.btn-delete-account:hover {
+  background: #e74c3c;
+  transform: translateY(-2px);
 }
 
 @media (max-width: 768px) {

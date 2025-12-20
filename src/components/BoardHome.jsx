@@ -4,6 +4,7 @@ import './BoardHome.css';
 function BoardHome({ posts, currentUser, onSelectBoard, onSelectPost }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [favoriteBoards, setFavoriteBoards] = useState({});
+  const [recentBoards, setRecentBoards] = useState([]);
 
   const boards = [
     { id: 'comic', name: '만화', icon: '📚', color: '#FF6B6B' },
@@ -14,13 +15,28 @@ function BoardHome({ posts, currentUser, onSelectBoard, onSelectPost }) {
     { id: 'sports', name: '스포츠', icon: '⚽', color: '#FCBAD3' }
   ];
 
-  // 즐겨찾기 불러오기
+  // 즐겨찾기 및 최근 방문 게시판 불러오기
   React.useEffect(() => {
     if (currentUser) {
       const savedFavorites = JSON.parse(localStorage.getItem('favoriteBoards') || '{}');
       setFavoriteBoards(savedFavorites);
+      
+      const savedRecent = JSON.parse(localStorage.getItem('recentBoards') || '{}');
+      const userRecent = savedRecent[currentUser.username] || [];
+      setRecentBoards(userRecent);
     }
   }, [currentUser]);
+
+  // 최근 방문 게시판 제거
+  const handleRemoveRecentBoard = (e, boardId) => {
+    e.stopPropagation();
+    const savedRecent = JSON.parse(localStorage.getItem('recentBoards') || '{}');
+    let userRecent = savedRecent[currentUser.username] || [];
+    userRecent = userRecent.filter(id => id !== boardId);
+    savedRecent[currentUser.username] = userRecent;
+    localStorage.setItem('recentBoards', JSON.stringify(savedRecent));
+    setRecentBoards(userRecent);
+  };
 
   // 즐겨찾기 토글
   const handleToggleFavorite = (e, boardId) => {
@@ -64,8 +80,6 @@ function BoardHome({ posts, currentUser, onSelectBoard, onSelectPost }) {
 
   return (
     <div className="board-home">
-      <h1 className="home-title">테마별 게시판</h1>
-      
       {/* 게시판 검색 */}
       <div className="board-search-container">
         <input
@@ -81,6 +95,36 @@ function BoardHome({ posts, currentUser, onSelectBoard, onSelectPost }) {
           </button>
         )}
       </div>
+
+      {/* 최근 방문한 게시판 */}
+      {currentUser && recentBoards.length > 0 && (
+        <div className="recent-boards-section">
+          <h3>최근 방문한 게시판</h3>
+          <div className="recent-boards-list">
+            {recentBoards.map(boardId => {
+              const board = boards.find(b => b.id === boardId);
+              if (!board) return null;
+              return (
+                <div 
+                  key={boardId} 
+                  className="recent-board-item"
+                  onClick={() => onSelectBoard(boardId)}
+                >
+                  <span className="recent-board-icon">{board.icon}</span>
+                  <span className="recent-board-name">{board.name}</span>
+                  <button
+                    className="btn-remove-recent"
+                    onClick={(e) => handleRemoveRecentBoard(e, boardId)}
+                    title="목록에서 제거"
+                  >
+                    ✕
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       <div className="boards-grid">
         {filteredBoards.map(board => {

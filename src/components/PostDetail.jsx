@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import './PostDetail.css';
 
-function PostDetail({ post, currentUser, onEdit, onBack, onDelete, onToggleLike, onAddComment, onDeleteComment, allPosts, onSelectPost }) {
+function PostDetail({ post, currentUser, onEdit, onBack, onDelete, onToggleLike, onAddComment, onDeleteComment, allPosts, onSelectPost, onCreateNew }) {
   const [commentText, setCommentText] = useState('');
   const [replyTexts, setReplyTexts] = useState({}); // 각 댓글별 대댓글 입력
   const [showReplyForm, setShowReplyForm] = useState({}); // 답글 폼 표시 여부
   const [isScrapped, setIsScrapped] = useState(false);
+  const [relatedSearchTerm, setRelatedSearchTerm] = useState('');
+  const [relatedSearchType, setRelatedSearchType] = useState('titleContent'); // 'title', 'titleContent', 'comment', 'author'
 
   if (!post) {
     return <div>게시글을 찾을 수 없습니다.</div>;
@@ -44,12 +46,36 @@ function PostDetail({ post, currentUser, onEdit, onBack, onDelete, onToggleLike,
     setIsScrapped(!isScrapped);
   };
 
-  // 같은 카테고리의 다른 게시글 (최대 10개)
+  // 같은 카테고리의 다른 게시글 (게시판 전체 검색)
   const relatedPosts = allPosts
     ? allPosts
-        .filter(p => p.category === post.category && p.id !== post.id)
+        .filter(p => {
+          if (p.category !== post.category || p.id === post.id) return false;
+          if (!relatedSearchTerm) return true;
+          
+          const searchLower = relatedSearchTerm.toLowerCase();
+          
+          switch (relatedSearchType) {
+            case 'title':
+              return p.title.toLowerCase().includes(searchLower);
+            case 'titleContent':
+              return p.title.toLowerCase().includes(searchLower) ||
+                     p.content.toLowerCase().includes(searchLower);
+            case 'comment':
+              return p.comments.some(comment => 
+                comment.content.toLowerCase().includes(searchLower) ||
+                (comment.replies && comment.replies.some(reply => 
+                  reply.content.toLowerCase().includes(searchLower)
+                ))
+              );
+            case 'author':
+              return p.authorName.toLowerCase().includes(searchLower);
+            default:
+              return true;
+          }
+        })
         .sort((a, b) => new Date(b.date) - new Date(a.date))
-        .slice(0, 10)
+        .slice(0, 20)
     : [];
 
   const handleSubmitComment = (e) => {
@@ -109,31 +135,78 @@ function PostDetail({ post, currentUser, onEdit, onBack, onDelete, onToggleLike,
   return (
     <div className="post-detail-container">
       <div className="detail-header">
-        <h2>{post.title}</h2>
-        <div className="detail-info">
-          <span>작성자: {post.authorName || post.author}</span>
-          <span>작성일: {new Date(post.date).toLocaleString()}</span>
-          <span>조회수: {post.views}</span>
-          <span>좋아요: {post.likes || 0}</span>
+        <div className="detail-title-wrapper">
+          <h2>{post.title}</h2>
+          <div className="detail-info">
+            <span>작성자: {post.authorName || post.author}</span>
+            <span>작성일: {new Date(post.date).toLocaleString()}</span>
+            <span>조회수: {post.views}</span>
+            <span>좋아요: {post.likes || 0}</span>
+          </div>
         </div>
+        {currentUser && (
+          <button className="btn-write-new" onClick={onCreateNew}>
+            글쓰기
+          </button>
+        )}
       </div>
       
       <div className="detail-content">
-        {post.content}
+        {/* 텍스트와 이미지를 함께 렌더링 */}
+        {(() => {
+          const content = post.content;
+          const imageRegex = /\[IMG:([^:]+):([^\]]+)\]/g;
+          const parts = [];
+          let lastIndex = 0;
+          let match;
+
+          while ((match = imageRegex.exec(content)) !== null) {
+            // 이미지 마커 앞의 텍스트 추가
+            if (match.index > lastIndex) {
+              parts.push({
+                type: 'text',
+                content: content.substring(lastIndex, match.index)
+              });
+            }
+            // 이미지 추가
+            parts.push({
+              type: 'image',
+              name: match[1],
+              url: match[2]
+            });
+            lastIndex = match.index + match[0].length;
+          }
+
+          // 마지막 텍스트 추가
+          if (lastIndex < content.length) {
+            parts.push({
+              type: 'text',
+              content: content.substring(lastIndex)
+            });
+          }
+
+          return parts.map((part, index) => {
+            if (part.type === 'text') {
+              return <p key={index} style={{ whiteSpace: 'pre-wrap' }}>{part.content}</p>;
+            } else {
+              return (
+                <div key={index} className="inline-image">
+                  <img src={part.url} alt={part.name} />
+                </div>
+              );
+            }
+          });
+        })()}
         
-        {/* 미디어 첨부 파일 */}
-        {post.media && post.media.length > 0 && (
+        {/* 비디오 파일은 별도 섹션에 표시 */}
+        {post.media && post.media.filter(m => m.type === 'video').length > 0 && (
           <div className="media-section">
-            {post.media.map((media, index) => (
+            {post.media.filter(m => m.type === 'video').map((media, index) => (
               <div key={index} className="media-item">
-                {media.type === 'image' ? (
-                  <img src={media.url} alt={`첨부 이미지 ${index + 1}`} />
-                ) : media.type === 'video' ? (
-                  <video controls>
-                    <source src={media.url} />
-                    브라우저가 비디오를 지원하지 않습니다.
-                  </video>
-                ) : null}
+                <video controls>
+                  <source src={media.url} />
+                  브라우저가 비디오를 지원하지 않습니다.
+                </video>
               </div>
             ))}
           </div>
@@ -299,20 +372,53 @@ function PostDetail({ post, currentUser, onEdit, onBack, onDelete, onToggleLike,
       </div>
 
       {/* 관련 게시글 */}
-      {relatedPosts.length > 0 && (
+      {allPosts && allPosts.filter(p => p.category === post.category && p.id !== post.id).length > 0 && (
         <div className="related-posts">
-          <h3>같은 게시판의 다른 글</h3>
-          <ul className="related-list">
-            {relatedPosts.map(relatedPost => (
-              <li key={relatedPost.id} onClick={() => onSelectPost(relatedPost.id)}>
-                <span className="related-title">{relatedPost.title}</span>
-                <span className="related-meta">
-                  <span>👁️ {relatedPost.views}</span>
-                  <span>❤️ {relatedPost.likes}</span>
-                </span>
-              </li>
-            ))}
-          </ul>
+          <h3>같은 게시판의 다른 글 (전체 검색)</h3>
+          <div className="related-search-bar">
+            <select 
+              value={relatedSearchType} 
+              onChange={(e) => setRelatedSearchType(e.target.value)}
+              className="related-search-type-select"
+            >
+              <option value="title">제목</option>
+              <option value="titleContent">제목+내용</option>
+              <option value="comment">댓글</option>
+              <option value="author">작성자</option>
+            </select>
+            <input
+              type="text"
+              placeholder={`${
+                relatedSearchType === 'title' ? '제목' :
+                relatedSearchType === 'titleContent' ? '제목 또는 내용' :
+                relatedSearchType === 'comment' ? '댓글' :
+                '작성자'
+              }으로 검색...`}
+              value={relatedSearchTerm}
+              onChange={(e) => setRelatedSearchTerm(e.target.value)}
+              className="related-search-input"
+            />
+            {relatedSearchTerm && (
+              <button className="btn-clear-related-search" onClick={() => setRelatedSearchTerm('')}>
+                ✕
+              </button>
+            )}
+          </div>
+          {relatedPosts.length > 0 ? (
+            <ul className="related-list">
+              {relatedPosts.map(relatedPost => (
+                <li key={relatedPost.id} onClick={() => onSelectPost(relatedPost.id)}>
+                  <span className="related-title">{relatedPost.title}</span>
+                  <span className="related-meta">
+                    <span>👁️ {relatedPost.views}</span>
+                    <span>❤️ {relatedPost.likes}</span>
+                  </span>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="no-related-posts">검색 결과가 없습니다.</p>
+          )}
         </div>
       )}
     </div>

@@ -55,7 +55,8 @@
 }
 
 .btn-profile,
-.btn-myactivity {
+.btn-myactivity,
+.btn-message {
   background: rgba(255, 255, 255, 0.9);
   color: #667eea;
   border: none;
@@ -68,7 +69,8 @@
 }
 
 .btn-profile:hover,
-.btn-myactivity:hover {
+.btn-myactivity:hover,
+.btn-message:hover {
   background: white;
   transform: translateY(-2px);
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);

@@ -1,7 +1,7 @@
 import React from 'react';
 import './Header.css';
 
-function Header({ currentUser, onLogout, onOpenProfile, onHome, onGoToMyActivity }) {
+function Header({ currentUser, onLogout, onOpenProfile, onHome, onGoToMyActivity, onOpenMessageForm }) {
   return (
     <header className="app-header">
       <div className="header-content">
@@ -11,6 +11,9 @@ function Header({ currentUser, onLogout, onOpenProfile, onHome, onGoToMyActivity
         {currentUser && (
           <div className="user-info">
             <span className="welcome">환영합니다, <strong>{currentUser.username}</strong>님!</span>
+            <button className="btn-message" onClick={onOpenMessageForm}>
+              메시지
+            </button>
             <button className="btn-myactivity" onClick={onGoToMyActivity}>
               내 활동
             </button>

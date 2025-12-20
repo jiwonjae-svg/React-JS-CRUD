@@ -12,7 +12,63 @@ import Profile from './components/Profile';
 import BoardHome from './components/BoardHome';
 import MyActivity from './components/MyActivity';
 import NotificationToast from './components/NotificationToast';
+import MessageForm from './components/MessageForm';
 import './App.css';
+
+// UUID 생성 함수
+const generateUUID = () => {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    const r = Math.random() * 16 | 0;
+    const v = c === 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+};
+
+// 추가 게시글 생성 함수
+const generateMorePosts = (startId) => {
+  const categories = ['comic', 'game', 'movie', 'book', 'music', 'sports'];
+  const titles = {
+    comic: ['최신 웹툰 추천', '만화 리뷰', '작가 인터뷰', '신작 소식', '명작 회고'],
+    game: ['게임 공략', '신작 리뷰', '업데이트 소식', '팁과 트릭', '커뮤니티 이벤트'],
+    movie: ['영화 리뷰', '감독 특집', '추천 작품', '시리즈 분석', 'OST 감상'],
+    book: ['독서 후기', '작가 분석', '책 추천', '북클럽 모임', '베스트셀러'],
+    music: ['앨범 리뷰', '콘서트 후기', '아티스트 소개', '플레이리스트', '신곡 발매'],
+    sports: ['경기 결과', '선수 분석', '팀 전략', '스포츠 뉴스', '경기 일정']
+  };
+  
+  const posts = [];
+  let id = startId;
+  
+  for (let i = 0; i < 150; i++) {
+    const category = categories[Math.floor(Math.random() * categories.length)];
+    const titleOptions = titles[category];
+    const title = `${titleOptions[Math.floor(Math.random() * titleOptions.length)]} #${i + 1}`;
+    const content = `이것은 ${category} 게시판의 테스트 게시글입니다. 페이지네이션 기능을 테스트하기 위한 샘플 데이터입니다.`;
+    const daysAgo = Math.floor(Math.random() * 30);
+    const hoursAgo = Math.floor(Math.random() * 24);
+    const date = new Date();
+    date.setDate(date.getDate() - daysAgo);
+    date.setHours(date.getHours() - hoursAgo);
+    
+    posts.push({
+      id: id++,
+      uuid: generateUUID(),
+      title,
+      author: `user${Math.floor(Math.random() * 50)}`,
+      authorName: `user${Math.floor(Math.random() * 50)}`,
+      content,
+      date: date.toISOString(),
+      views: Math.floor(Math.random() * 500),
+      likes: Math.floor(Math.random() * 100),
+      likedBy: [],
+      comments: [],
+      media: [],
+      category
+    });
+  }
+  
+  return posts;
+};
 
 // 초기 샘플 데이터 - 각 게시판별 5개씩
 const initialPosts = [
@@ -59,6 +115,9 @@ const initialPosts = [
   { id: 30, title: '마라톤 완주 후기', author: 'runner_life', authorName: 'runner_life', content: '인생 첫 풀코스 마라톤 완주했습니다! 감동이에요.', date: new Date('2025-12-16T08:30:00').toISOString(), views: 87, likes: 39, likedBy: [], comments: [], media: [], category: 'sports' }
 ];
 
+// 추가 게시글 생성
+const allInitialPosts = [...initialPosts, ...generateMorePosts(31)];
+
 function MainApp() {
   const { currentUser, login, register, logout, findAccount, resetPassword } = useAuth();
   const [authView, setAuthView] = useState('main'); // 'main', 'login', 'register', 'find'
@@ -68,16 +127,21 @@ function MainApp() {
   const [showProfile, setShowProfile] = useState(false);
   const [selectedPost, setSelectedPost] = useState(null);
   const [editingPost, setEditingPost] = useState(null);
-  const [nextId, setNextId] = useState(31);
+  const [nextId, setNextId] = useState(181);
   const [notifications, setNotifications] = useState([]);
   const [currentToast, setCurrentToast] = useState(null);
+  const [showMessageForm, setShowMessageForm] = useState(false);
 
   // localStorage 초기화 및 게시글 불러오기
   useEffect(() => {
-    // 기존 데이터 삭제하고 새로운 임시 데이터로 초기화
-    localStorage.removeItem('posts');
-    setPosts(initialPosts);
-    localStorage.setItem('posts', JSON.stringify(initialPosts));
+    // UUID가 없는 기존 게시글에 UUID 추가
+    const postsWithUUID = allInitialPosts.map(post => ({
+      ...post,
+      uuid: post.uuid || generateUUID()
+    }));
+    
+    setPosts(postsWithUUID);
+    localStorage.setItem('posts', JSON.stringify(postsWithUUID));
     
     // 알림 불러오기
     const savedNotifications = JSON.parse(localStorage.getItem('notifications') || '[]');
@@ -98,6 +162,15 @@ function MainApp() {
     }
   }, [notifications]);
 
+  // UUID 생성 함수
+  const generateUUID = () => {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      const r = Math.random() * 16 | 0;
+      const v = c === 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
+  };
+
   // URL 해시 기반 라우팅
   useEffect(() => {
     const handleHashChange = () => {
@@ -116,16 +189,37 @@ function MainApp() {
         setCurrentView('board');
         setSelectedPost(null);
       } else if (route === 'post' && param) {
-        const postId = parseInt(param);
-        const post = posts.find(p => p.id === postId);
+        // UUID 또는 숫자 ID로 게시글 찾기
+        const post = posts.find(p => p.uuid === param || p.id === parseInt(param));
         if (post) {
           setCurrentBoard(post.category);
           setSelectedPost(post);
           setCurrentView('detail');
+        } else {
+          alert('삭제되었거나 존재하지 않는 게시글입니다.');
+          window.location.hash = '';
         }
       } else if (route === 'myactivity') {
         setCurrentView('myactivity');
         setSelectedPost(null);
+      } else if (route === 'create') {
+        // create 모드 - 카테고리 파라미터가 있으면 설정
+        setCurrentView('create');
+        setEditingPost(null);
+        if (param) {
+          setCurrentBoard(param);
+        }
+      } else if (route === 'edit' && param) {
+        // edit 모드 - UUID로 게시글 찾기
+        const post = posts.find(p => p.uuid === param || p.id === parseInt(param));
+        if (post) {
+          setEditingPost(post);
+          setCurrentView('edit');
+          setCurrentBoard(post.category);
+        } else {
+          alert('수정할 게시글을 찾을 수 없습니다.');
+          window.location.hash = '';
+        }
       }
     };
 
@@ -199,26 +293,54 @@ function MainApp() {
     setCurrentView('board');
     setSelectedPost(null);
     setEditingPost(null);
+    
+    // 최근 방문 게시판 목록에 추가
+    if (currentUser) {
+      const savedRecent = JSON.parse(localStorage.getItem('recentBoards') || '{}');
+      let userRecent = savedRecent[currentUser.username] || [];
+      
+      // 이미 있으면 제거 후 맨 앞에 추가
+      userRecent = userRecent.filter(id => id !== boardId);
+      userRecent.unshift(boardId);
+      
+      // 최대 5개까지만 유지
+      if (userRecent.length > 5) {
+        userRecent = userRecent.slice(0, 5);
+      }
+      
+      savedRecent[currentUser.username] = userRecent;
+      localStorage.setItem('recentBoards', JSON.stringify(savedRecent));
+    }
   };
 
   // 게시글 목록으로 이동
   const handleBackToList = (postCategory) => {
     // 게시글의 카테고리가 있으면 해당 게시판으로, 없으면 현재 게시판 유지
     const targetBoard = postCategory || currentBoard;
-    window.location.hash = `board/${targetBoard}`;
-    if (postCategory && postCategory !== currentBoard) {
-      setCurrentBoard(postCategory);
+    
+    if (targetBoard) {
+      // 게시판이 있으면 해당 게시판으로
+      window.location.hash = `board/${targetBoard}`;
+      setCurrentView('board');
+      if (postCategory && postCategory !== currentBoard) {
+        setCurrentBoard(postCategory);
+      }
+    } else {
+      // 게시판이 없으면 홈으로
+      window.location.hash = '';
+      setCurrentView('home');
+      setCurrentBoard(null);
     }
-    setCurrentView('board');
+    
     setSelectedPost(null);
     setEditingPost(null);
   };
 
   // 게시글 선택 (상세보기)
   const handleSelectPost = (id) => {
-    const post = posts.find(p => p.id === id);
+    const post = posts.find(p => p.id === id || p.uuid === id);
     if (post) {
-      window.location.hash = `post/${id}`;
+      window.location.hash = `post/${post.uuid || post.id}`;
       // 게시글의 카테고리를 currentBoard로 설정
       if (post.category) {
         setCurrentBoard(post.category);
@@ -226,7 +348,7 @@ function MainApp() {
       // 조회수 증가
       const updatedPost = { ...post, views: post.views + 1 };
       setPosts(posts.map(p => 
-        p.id === id ? updatedPost : p
+        (p.id === post.id || p.uuid === post.uuid) ? updatedPost : p
       ));
       setSelectedPost(updatedPost);
       setCurrentView('detail');
@@ -239,12 +361,26 @@ function MainApp() {
       alert('로그인이 필요합니다.');
       return;
     }
+    
+    // 이미 create 모드면 폼을 리셋하기 위해 nextId를 증가시켜 key로 사용
+    if (currentView === 'create') {
+      setNextId(prev => prev + 1);
+    } else {
+      // URL 해시 설정 (카테고리 정보 포함)
+      if (currentBoard) {
+        window.location.hash = `create/${currentBoard}`;
+      } else {
+        window.location.hash = 'create';
+      }
+    }
+    
     setCurrentView('create');
     setEditingPost(null);
   };
 
   // 게시글 수정 페이지로 이동
   const handleEditPost = (post) => {
+    window.location.hash = `edit/${post.uuid || post.id}`;
     setEditingPost(post);
     setCurrentView('edit');
   };
@@ -257,8 +393,10 @@ function MainApp() {
     }
     
     try {
+      const uuid = generateUUID();
       const newPost = {
         id: nextId,
+        uuid: uuid,
         title: formData.title,
         author: currentUser.username,
         authorName: currentUser.username,
@@ -273,13 +411,18 @@ function MainApp() {
       };
       setPosts([newPost, ...posts]);
       setNextId(nextId + 1);
+      
+      // 해당 카테고리 게시판으로 이동
+      const targetCategory = formData.category || currentBoard || 'comic';
+      window.location.hash = `board/${targetCategory}`;
+      setCurrentBoard(targetCategory);
       setCurrentView('board');
       
       // 게시글 작성 알림
       addNotification(
         '게시글 작성',
         `새 게시글 "${formData.title}"이(가) 작성되었습니다.`,
-        `#post/${nextId}`,
+        `#post/${uuid}`,
         currentUser.username
       );
       
@@ -387,7 +530,7 @@ function MainApp() {
           addNotification(
             '새 댓글',
             `"${post.title}" 게시글에 새 댓글이 달렸습니다.`,
-            `#post/${postId}`,
+            `#post/${post.uuid || postId}`,
             post.author
           );
         }
@@ -497,6 +640,33 @@ function MainApp() {
     }
   };
 
+  // 알림 삭제
+  const handleDeleteNotification = (notificationId) => {
+    const updatedNotifications = notifications.filter(n => n.id !== notificationId);
+    setNotifications(updatedNotifications);
+    localStorage.setItem('notifications', JSON.stringify(updatedNotifications));
+  };
+
+  // 메시지 삭제
+  const handleDeleteMessage = (messageId) => {
+    const messages = JSON.parse(localStorage.getItem('messages') || '[]');
+    const updatedMessages = messages.filter(m => m.id !== messageId);
+    localStorage.setItem('messages', JSON.stringify(updatedMessages));
+    // 강제로 리렌더링을 위해 notifications 업데이트
+    setNotifications([...notifications]);
+  };
+
+  // 스크랩 삭제
+  const handleDeleteScrap = (postId) => {
+    const scrapData = JSON.parse(localStorage.getItem('scraps') || '{}');
+    let userScraps = scrapData[currentUser.username] || [];
+    userScraps = userScraps.filter(id => id !== postId);
+    scrapData[currentUser.username] = userScraps;
+    localStorage.setItem('scraps', JSON.stringify(scrapData));
+    // 강제로 리렌더링을 위해 notifications 업데이트
+    setNotifications([...notifications]);
+  };
+
   // 로그인 성공 시 메인으로 돌아가기
   useEffect(() => {
     if (currentUser) {
@@ -546,6 +716,7 @@ function MainApp() {
         onOpenProfile={() => setShowProfile(true)}
         onHome={handleBackToHome}
         onGoToMyActivity={handleGoToMyActivity}
+        onOpenMessageForm={() => setShowMessageForm(true)}
       />
       {!currentUser && (
         <div className="guest-banner">
@@ -573,6 +744,9 @@ function MainApp() {
           onSelectBoard={handleSelectBoard}
           notifications={notifications}
           onNotificationClick={handleNotificationClick}
+          onDeleteNotification={handleDeleteNotification}
+          onDeleteMessage={handleDeleteMessage}
+          onDeleteScrap={handleDeleteScrap}
         />
       )}
 
@@ -606,15 +780,18 @@ function MainApp() {
                   onDeleteComment={handleDeleteComment}
                   allPosts={posts}
                   onSelectPost={handleSelectPost}
+                  onCreateNew={handleCreateNew}
                 />
               )}
 
               {currentView === 'create' && currentUser && (
                 <PostForm
+                  key={nextId}
                   currentUser={currentUser}
                   onSubmit={handleCreatePost}
-                  onCancel={handleBackToList}
+                  onCancel={() => handleBackToList(currentBoard)}
                   defaultCategory={currentBoard}
+                  currentBoard={currentBoard}
                 />
               )}
 
@@ -623,7 +800,8 @@ function MainApp() {
                   post={editingPost}
                   currentUser={currentUser}
                   onSubmit={handleUpdatePost}
-                  onCancel={handleBackToList}
+                  onCancel={() => handleBackToList(editingPost?.category)}
+                  currentBoard={currentBoard}
                 />
               )}
             </div>
@@ -633,6 +811,28 @@ function MainApp() {
 
       {showProfile && currentUser && (
         <Profile onClose={() => setShowProfile(false)} />
+      )}
+
+      {/* 메시지 폼 */}
+      {showMessageForm && currentUser && (
+        <MessageForm
+          currentUser={currentUser}
+          onClose={() => setShowMessageForm(false)}
+          onSendMessage={(msg) => {
+            addNotification(
+              '메시지 전송',
+              `${msg.toName}님에게 메시지를 보냈습니다.`,
+              null,
+              currentUser.username
+            );
+            addNotification(
+              '새 메시지',
+              `${msg.fromName}님이 메시지를 보냈습니다.`,
+              null,
+              msg.to
+            );
+          }}
+        />
       )}
 
       {/* 알림 토스트 */}

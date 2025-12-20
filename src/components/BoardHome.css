@@ -54,7 +54,74 @@
   background-color: #f0f0f0;
   color: #333;
 }
+/* 최근 방문한 게시판 */
+.recent-boards-section {
+  max-width: 1200px;
+  margin: 0 auto 40px;
+  padding: 20px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
 
+.recent-boards-section h3 {
+  margin: 0 0 16px 0;
+  font-size: 18px;
+  color: #495057;
+  font-weight: 600;
+}
+
+.recent-boards-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.recent-board-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: white;
+  border: 2px solid #dee2e6;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.recent-board-item:hover {
+  border-color: #667eea;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+}
+
+.recent-board-icon {
+  font-size: 20px;
+}
+
+.recent-board-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: #495057;
+}
+
+.btn-remove-recent {
+  background: none;
+  border: none;
+  color: #adb5bd;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 50%;
+  transition: all 0.2s;
+  margin-left: 4px;
+}
+
+.btn-remove-recent:hover {
+  background: #f8d7da;
+  color: #dc3545;
+}
 .no-boards-message {
   text-align: center;
   padding: 60px 20px;

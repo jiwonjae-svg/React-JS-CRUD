@@ -8,9 +8,13 @@ const MyActivity = ({
   onSelectBoard,
   onSendMessage,
   notifications,
-  onNotificationClick
+  onNotificationClick,
+  onDeleteNotification,
+  onDeleteMessage,
+  onDeleteScrap
 }) => {
   const [activeTab, setActiveTab] = useState('posts'); // posts, notifications, favorites, scraps, messages
+  const [selectedMessage, setSelectedMessage] = useState(null);
 
   // 내가 작성한 글 필터링
   const myPosts = posts.filter(post => post.author === currentUser.username);
@@ -142,13 +146,29 @@ const MyActivity = ({
             <div 
               key={notification.id} 
               className={`activity-item notification-item ${notification.read ? 'read' : 'unread'}`}
-              onClick={() => onNotificationClick(notification)}
             >
-              <div className="notification-type">{notification.type}</div>
-              <div className="notification-message">{notification.message}</div>
-              <div className="activity-meta">
-                <span>{new Date(notification.date).toLocaleString()}</span>
+              <div 
+                className="notification-content"
+                onClick={() => onNotificationClick(notification)}
+              >
+                <div className="notification-type">{notification.type}</div>
+                <div className="notification-message">{notification.message}</div>
+                <div className="activity-meta">
+                  <span>{new Date(notification.date).toLocaleString()}</span>
+                </div>
               </div>
+              <button
+                className="btn-delete-item"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (window.confirm('이 알림을 삭제하시겠습니까?')) {
+                    onDeleteNotification(notification.id);
+                  }
+                }}
+                title="삭제"
+              >
+                ✕
+              </button>
             </div>
           ))}
         </div>
@@ -189,16 +209,34 @@ const MyActivity = ({
       ) : (
         <div className="posts-list">
           {scrappedPosts.map(post => (
-            <div key={post.id} className="activity-item" onClick={() => handlePostClick(post.id, post.category)}>
-              <div className="activity-item-header">
-                <span className="board-badge">[{boardNames[post.category]}]</span>
-                <span className="activity-title">{post.title}</span>
+            <div key={post.id} className="activity-item">
+              <div 
+                className="activity-content"
+                onClick={() => handlePostClick(post.id, post.category)}
+              >
+                <div className="activity-item-header">
+                  <span className="board-badge">[{boardNames[post.category]}]</span>
+                  <span className="activity-title">{post.title}</span>
+                </div>
+                <div className="activity-meta">
+                  <span>{post.authorName}</span>
+                  <span>{new Date(post.date).toLocaleDateString()}</span>
+                  <span>조회 {post.views}</span>
+                  <span>좋아요 {post.likes}</span>
+                </div>
               </div>
-              <div className="activity-meta">
-                <span>{post.authorName}</span>
-                <span>{new Date(post.date).toLocaleDateString()}</span>
-                <span>조회 {post.views}</span>
-              </div>
+              <button
+                className="btn-delete-item"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (window.confirm('스크랩을 취소하시겠습니까?')) {
+                    onDeleteScrap(post.id);
+                  }
+                }}
+                title="스크랩 취소"
+              >
+                ✕
+              </button>
             </div>
           ))}
         </div>
@@ -215,11 +253,34 @@ const MyActivity = ({
         <div className="messages-list">
           {receivedMessages.map(msg => (
             <div key={msg.id} className={`activity-item message-item ${msg.read ? 'read' : 'unread'}`}>
-              <div className="message-header">
-                <span className="message-from">보낸이: {msg.fromName}</span>
-                <span className="message-date">{new Date(msg.date).toLocaleString()}</span>
+              <div className="message-content-wrapper">
+                <div className="message-header">
+                  <span className="message-from">보낸이: {msg.fromName}</span>
+                  <span className="message-date">{new Date(msg.date).toLocaleString()}</span>
+                </div>
+                <div className="message-content">{msg.content}</div>
               </div>
-              <div className="message-content">{msg.content}</div>
+              <div className="message-actions">
+                <button
+                  className="btn-view-message"
+                  onClick={() => setSelectedMessage(msg)}
+                  title="자세히 보기"
+                >
+                  📖
+                </button>
+                <button
+                  className="btn-delete-item"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (window.confirm('이 메시지를 삭제하시겠습니까?')) {
+                      onDeleteMessage(msg.id);
+                    }
+                  }}
+                  title="삭제"
+                >
+                  ✕
+                </button>
+              </div>
             </div>
           ))}
         </div>
@@ -232,11 +293,34 @@ const MyActivity = ({
         <div className="messages-list">
           {sentMessages.map(msg => (
             <div key={msg.id} className="activity-item message-item">
-              <div className="message-header">
-                <span className="message-from">받는이: {msg.toName}</span>
-                <span className="message-date">{new Date(msg.date).toLocaleString()}</span>
+              <div className="message-content-wrapper">
+                <div className="message-header">
+                  <span className="message-to">받는이: {msg.toName}</span>
+                  <span className="message-date">{new Date(msg.date).toLocaleString()}</span>
+                </div>
+                <div className="message-content">{msg.content}</div>
               </div>
-              <div className="message-content">{msg.content}</div>
+              <div className="message-actions">
+                <button
+                  className="btn-view-message"
+                  onClick={() => setSelectedMessage(msg)}
+                  title="자세히 보기"
+                >
+                  📖
+                </button>
+                <button
+                  className="btn-delete-item"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (window.confirm('이 메시지를 삭제하시겠습니까?')) {
+                      onDeleteMessage(msg.id);
+                    }
+                  }}
+                  title="삭제"
+                >
+                  ✕
+                </button>
+              </div>
             </div>
           ))}
         </div>
@@ -246,6 +330,42 @@ const MyActivity = ({
 
   return (
     <div className="my-activity">
+      {/* 메시지 자세히 보기 모달 */}
+      {selectedMessage && (
+        <div className="message-detail-modal" onClick={() => setSelectedMessage(null)}>
+          <div className="message-detail-content" onClick={(e) => e.stopPropagation()}>
+            <div className="message-detail-header">
+              <h3>메시지 자세히 보기</h3>
+              <button className="btn-close-modal" onClick={() => setSelectedMessage(null)}>✕</button>
+            </div>
+            <div className="message-detail-body">
+              <div className="message-detail-info">
+                <div className="info-row">
+                  <span className="info-label">보낸이:</span>
+                  <span className="info-value">{selectedMessage.fromName}</span>
+                </div>
+                {selectedMessage.to && (
+                  <div className="info-row">
+                    <span className="info-label">받는이:</span>
+                    <span className="info-value">{selectedMessage.toName}</span>
+                  </div>
+                )}
+                <div className="info-row">
+                  <span className="info-label">날짜:</span>
+                  <span className="info-value">{new Date(selectedMessage.date).toLocaleString()}</span>
+                </div>
+              </div>
+              <div className="message-detail-text">
+                {selectedMessage.content}
+              </div>
+            </div>
+            <div className="message-detail-footer">
+              <button className="btn-close" onClick={() => setSelectedMessage(null)}>닫기</button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="activity-header">
         <h2>내 활동</h2>
       </div>
