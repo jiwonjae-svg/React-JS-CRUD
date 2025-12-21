@@ -1,4 +1,4 @@
-# React 커뮤니티 게시판 (SNS2)
+# React 커뮤니티 게시판
 
 React와 Vite로 구현한 테마별 커뮤니티 게시판 애플리케이션입니다.
 
@@ -220,3 +220,4 @@ MIT License
 ---
 
 **Made with ❤️ using React & Vite**
+
