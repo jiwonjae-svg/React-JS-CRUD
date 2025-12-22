@@ -1,257 +1,450 @@
-# React 커뮤니티 게시판 (Inside Live)
+# Inside Live - Community Board Platform
 
-React와 Vite로 구현한 테마별 커뮤니티 게시판 애플리케이션입니다.
+A full-stack community board application built with React, Vite, Express, MongoDB, and Socket.IO. Features category-based boards, real-time notifications, OAuth authentication, and comprehensive social features.
 
-## 🌟 주요 기능
+## ✨ Features
 
-### 1. 인증 시스템
-- **회원가입**: 사용자명, 이메일, 비밀번호 입력 (강력한 비밀번호 검증)
-- **로그인**: 사용자명 또는 이메일로 로그인 (Rate Limiting 적용)
-- **자동 로그인**: "로그인 상태 유지" 옵션
-- **계정 찾기**: 이메일로 사용자명 찾기
-- **비밀번호 재설정**: 이메일 인증을 통한 비밀번호 변경
-- **회원정보 수정**: 사용자명, 이메일, 비밀번호 변경
-- **계정 삭제**: 모든 작성 게시글/댓글과 함께 삭제
-- **세션 관리**: 60분 자동 로그아웃
+### 🔐 Authentication & Security
+- **User Registration**: Username (3-20 chars), email, and strong password validation
+- **Login System**: Login with username or email (rate-limited: 5 attempts/minute)
+- **OAuth Integration**: Google and GitHub authentication support
+- **Remember Me**: Persistent login sessions
+- **Account Recovery**: Find username by email, password reset via email verification
+- **Account Management**: Update username, email, password; delete account with all posts/comments
+- **Session Management**: 60-minute auto-logout with security features
+- **Security Measures**: XSS prevention, password hashing (bcrypt), input validation, rate limiting
 
-### 2. 게시글 관리
-- **CRUD 기능**: 작성, 조회, 수정, 삭제
-- **테마별 게시판**: 만화, 게임, 영화, 책, 음악, 스포츠
-- **다양한 검색**: 제목, 제목+내용, 댓글, 작성자별 검색
-- **페이지네이션**: 10~50개 항목 선택 가능 (기본 30개)
-- **미디어 첨부**: 이미지/비디오 업로드 (이미지 자동 리사이징)
-- **인라인 이미지**: 본문에 이미지 삽입
-- **좋아요**: 게시글 좋아요/취소 (중복 방지)
-- **조회수**: 자동 증가
-- **스크랩**: 게시글 저장 기능
+### 📝 Post Management
+- **CRUD Operations**: Create, read, update, and delete posts
+- **Category Boards**: Comics, Games, Movies, Books, Music, Sports
+- **Advanced Search**: Search by title, title+content, comments, or author
+- **Pagination**: Customizable items per page (10-50, default: 30)
+- **Media Attachments**: Upload images/videos with automatic image resizing
+- **Inline Images**: Insert images directly into post content
+- **Reactions**: Like/unlike posts (duplicate prevention)
+- **View Counter**: Automatic view count tracking
+- **Bookmarks**: Save posts for later viewing
 
-### 3. 댓글 시스템
-- **댓글 작성**: 게시글별 댓글 작성
-- **대댓글**: 댓글에 답글 작성
-- **댓글 검색**: 댓글 내용으로도 게시글 검색 가능
-- **댓글 삭제**: 작성자만 삭제 가능
+### 💬 Comment System
+- **Nested Comments**: Comment on posts and reply to comments (2-level hierarchy)
+- **Comment Search**: Find posts by comment content
+- **Moderation**: Authors can delete their own comments
+- **Real-time Updates**: Comments appear instantly via Socket.IO
 
-### 4. 소셜 기능
-- **나의 활동**: 내가 쓴 글, 댓글 단 글, 좋아요한 글, 스크랩한 글
-- **즐겨찾기**: 게시판 즐겨찾기 추가/제거
-- **인기 게시글**: 좋아요 TOP 5 (사이드바)
-- **메시지**: 사용자 간 메시지 전송
-- **알림**: 게시글 작성, 댓글 등록 알림
+### 👥 Social Features
+- **Activity Tracking**: View your posts, commented posts, liked posts, and bookmarks
+- **Favorite Boards**: Pin frequently used categories
+- **Popular Posts**: Top 5 most-liked posts in sidebar
+- **Messaging**: Direct messages between users
+- **Real-time Notifications**: Get notified of new posts, comments, and messages
+- **User Profiles**: View and edit profile information
 
-### 5. 보안 기능
-- **XSS 방지**: HTML 태그 및 스크립트 필터링
-- **입력 검증**: 사용자명, 이메일, 비밀번호 강도 검증
-- **비밀번호 해싱**: 암호화된 비밀번호 저장
-- **Rate Limiting**: 로그인 시도 제한 (5회/분)
-- **세션 타임아웃**: 60분 자동 로그아웃
-- **파일 업로드 검증**: 파일 타입 및 크기 제한
+### 🎨 Theming & UI
+- **Dark/Light Mode**: Toggle between themes with CSS variables
+- **Responsive Design**: Mobile-friendly interface
+- **PWA Support**: Progressive Web App with offline capabilities
+- **Modern UI**: Smooth animations and transitions
 
-## 📂 프로젝트 구조
+## 🏗️ Project Structure
 
+```
 Inside Live/
 ├── public/
-│   ├── manifest.json          # PWA 설정
-│   └── service-worker.js      # 서비스 워커
+│   ├── manifest.json          # PWA manifest
+│   └── service-worker.js      # Service worker for offline support
 ├── src/
+│   ├── components/            # React components
+│   │   ├── Header.jsx         # Navigation header
+│   │   ├── Sidebar.jsx        # Sidebar with popular posts
+│   │   ├── CategoryNav.jsx    # Category navigation
+│   │   ├── BoardHome.jsx      # Board listing page
+│   │   ├── PostList.jsx       # Post list with pagination
+│   │   ├── PostDetail.jsx     # Individual post view
+│   │   ├── PostForm.jsx       # Create/edit post form
+│   │   ├── Login.jsx          # Login page
+│   │   ├── Register.jsx       # Registration page
+│   │   ├── Profile.jsx        # User profile page
+│   │   ├── MyActivity.jsx     # User activity dashboard
+│   │   ├── FindAccount.jsx    # Account recovery
+│   │   ├── MessageForm.jsx    # Direct messaging
+│   │   └── NotificationToast.jsx # Toast notifications
 │   ├── context/
-│   │   ├── AuthContext.jsx    # 인증 상태
-│   │   └── ThemeContext.jsx   # 테마 상태 (NEW)
-│   └── styles/
-│       └── themes.css         # 테마 CSS 변수 (NEW)
-└── server/                    # 백엔드 서버 (NEW)
-    ├── package.json
-    ├── .env.example
-    ├── server.js              # Express + Socket.IO
+│   │   ├── AuthContext.jsx    # Authentication state management
+│   │   └── ThemeContext.jsx   # Theme state management
+│   ├── services/
+│   │   ├── api.js             # API service layer
+│   │   └── socket.js          # Socket.IO client
+│   ├── utils/
+│   │   └── security.js        # Security utilities (XSS prevention)
+│   ├── styles/
+│   │   └── themes.css         # CSS variables for theming
+│   ├── App.jsx                # Main application component
+│   └── main.jsx               # Application entry point
+└── server/                    # Backend server
+    ├── server.js              # Express + Socket.IO server
     ├── models/
-    │   ├── User.js            # 사용자 모델
-    │   └── Post.js            # 게시글 모델
-    ├── routes/                # API 라우트 (구현 예정)
-    │   ├── auth.js
-    │   ├── posts.js
-    │   ├── comments.js
-    │   ├── users.js
-    │   └── upload.js
-    ├── middleware/            # 미들웨어 (구현 예정)
-    │   └── auth.js
-    └── config/                # 설정 (구현 예정)
-        └── passport.js
+    │   ├── User.js            # User schema (MongoDB)
+    │   └── Post.js            # Post schema (MongoDB)
+    ├── routes/                # API routes
+    │   ├── auth.js            # Authentication endpoints
+    │   ├── posts.js           # Post CRUD endpoints
+    │   ├── comments.js        # Comment endpoints
+    │   ├── users.js           # User management endpoints
+    │   ├── upload.js          # File upload endpoints
+    │   └── email.js           # Email service endpoints
+    ├── middleware/
+    │   └── auth.js            # Authentication middleware
+    ├── config/
+    │   └── passport.js        # Passport OAuth configuration
+    └── package.json
+```
 
-## 🛠️ 사용 기술
-
-- **React 18.2**: UI 라이브러리
-- **Vite 5.0**: 빌드 도구 및 개발 서버
-- **Context API**: 전역 상태 관리
-- **LocalStorage**: 클라이언트 측 데이터 저장
-- **CSS3**: 모던 스타일링 (Flexbox, Grid, Animation)
-- **ES6+**: 최신 JavaScript 문법
-
-## 📖 사용 방법
-
-### 회원가입 & 로그인
-1. **회원가입**: 사용자명(3-20자), 이메일, 강력한 비밀번호 입력
-2. **로그인**: 사용자명 또는 이메일로 로그인
-3. **자동 로그인**: "로그인 상태 유지" 체크
-
-### 게시글 작성
-1. 카테고리 선택 (만화/게임/영화/책/음악/스포츠)
-2. "글쓰기" 버튼 클릭
-3. 제목, 내용 입력
-4. 이미지/비디오 첨부 (선택)
-5. "작성" 버튼 클릭
-
-### 검색 & 필터링
-- **검색 타입**: 제목, 제목+내용, 댓글, 작성자
-- **관련 게시글**: 같은 게시판의 다른 글 검색
-- **페이지 설정**: 10~50개 게시글 표시
-
-### 나의 활동
-1. 헤더의 "나의 활동" 클릭
-2. 내가 쓴 글, 댓글 단 글, 좋아요한 글, 스크랩한 글 확인
-
-## ✨ 특징
-
-### UI/UX
-- 📱 **반응형 디자인**: 모든 화면 크기 대응
-- 🎨 **모던한 디자인**: 그라디언트, 부드러운 애니메이션
-- 🎯 **직관적인 인터페이스**: 간단한 네비게이션
-- ⚡ **빠른 로딩**: Vite 기반 최적화
-
-### 데이터 관리
-- 💾 **LocalStorage**: 브라우저 로컬 저장
-- 🔄 **실시간 업데이트**: 즉각적인 UI 반영
-- 📊 **180개 샘플 데이터**: 페이지네이션 테스트용
-
-### 보안
-- 🔐 **입력 검증**: 모든 사용자 입력 검증
-- 🛡️ **XSS 방지**: HTML/스크립트 필터링
-- 🔑 **비밀번호 해싱**: 암호화된 저장
-- ⏱️ **세션 관리**: 자동 로그아웃
-
-## 🎯 개발 하이라이트
-
-### 1. 고급 검색 기능
-- 4가지 검색 타입 (제목/제목+내용/댓글/작성자)
-- 게시판 전체 검색 (표시된 목록이 아닌 전체 데이터)
-- 동적 placeholder 및 빈 결과 메시지
-
-### 2. 페이지네이션 시스템
-- 사용자 지정 항목 수 (10/15/20/25/30/35/40/45/50)
-- 처음/이전/페이지번호/다음/마지막 버튼
-- 현재 페이지 주변 10개 페이지 표시
-
-### 3. 인라인 이미지 편집
-- 본문 내 이미지 실시간 미리보기
-- 이미지는 [IMG:파일명:URL] 마커로 저장
-- 텍스트와 이미지 통합 렌더링
-
-### 4. 보안 강화
-- 비밀번호 강도 검증 (8자 이상, 대소문자, 숫자, 특수문자)
-- Rate Limiting (5회/분 로그인 제한)
-- 세션 타임아웃 (60분 후 자동 로그아웃)
-- 파일 업로드 검증 (타입, 크기)
-
-## 🔒 보안 참고사항
-
-**현재 구현 수준**
-- 클라이언트 측 보안 구현 (LocalStorage 기반)
-- 간단한 비밀번호 해싱 (실제 프로덕션용 아님)
-- XSS 방지, 입력 검증, Rate Limiting 적용
-
-**프로덕션 환경 권장사항**
-- 백엔드 API 서버 구현 (Node.js, Express 등)
-- 실제 데이터베이스 사용 (MongoDB, PostgreSQL 등)
-- JWT 토큰 기반 인증
-- bcrypt 등 강력한 해싱 알고리즘
-- HTTPS 프로토콜
-- 서버 측 Rate Limiting 및 CSRF 방지
-
-## 📊 샘플 데이터
-
-- **초기 게시글**: 30개
-- **생성된 게시글**: 150개 추가 (총 180개)
-- **카테고리 분포**: 만화/게임/영화/책/음악/스포츠
-- **랜덤 데이터**: 제목, 날짜, 조회수, 좋아요 수
-
-## 🐛 알려진 제한사항
-
-- LocalStorage 용량 제한 (브라우저당 5-10MB)
-- 대용량 이미지 업로드 시 Base64 인코딩으로 용량 증가
-- 멀티 브라우저 간 데이터 동기화 불가
-- 실시간 알림 기능 없음 (새로고침 필요)
-
-## 💡 최근 구현된 기능
-
-### ✅ 다크 모드 (완료)
-- 🌓 라이트/다크 테마 전환
-- 💾 LocalStorage에 설정 자동 저장
-- 🎨 30+ CSS 변수를 이용한 완전한 테마 시스템
-- 🔘 오른쪽 하단 플로팅 버튼으로 토글
-
-### ✅ PWA (Progressive Web App) 지원 (완료)
-- 📱 홈 화면 추가 가능
-- 🔄 서비스 워커로 오프라인 캐싱
-- 📲 푸시 알림 준비
-- 🚀 게시판별 바로가기 (Shortcuts)
-
-### 🔄 백엔드 API 서버 (구현 중)
-- ⚙️ Node.js + Express 구조 완성
-- 🔌 Socket.IO 실시간 통신 준비
-- 🗄️ MongoDB + Mongoose 데이터 모델
-- 🔐 JWT 인증 시스템 (구현 예정)
-- 🛡️ Helmet 보안, Rate Limiting 적용
-
-### 🔄 WebSocket 실시간 기능 (구현 중)
-- 🔴 Socket.IO 서버 설정 완료
-- 📡 실시간 알림 이벤트 정의
-- 💬 실시간 댓글 업데이트 준비
-- 📢 게시글 작성 알림 준비
-
-### 🔄 이미지 CDN (준비 중)
-- ☁️ Cloudinary 설정 완료
-- 📤 Multer 파일 업로드 준비
-- 🖼️ 이미지 최적화 및 리사이징
-
-### 🔄 소셜 로그인 (준비 중)
-- 🔑 Passport.js 설치 완료
-- 🌐 Google OAuth 준비
-- 🐙 GitHub OAuth 준비
-
-## 🛠️ 기술 스택 (업데이트)
+## 🛠️ Tech Stack
 
 ### Frontend
-- React 18.2 - UI 라이브러리
-- Vite 5.0 - 빌드 도구
-- Context API - 전역 상태 관리 (Auth, Theme)
-- CSS Variables - 동적 테마 시스템
-- Service Worker - PWA 오프라인 지원
+- **React 18.2**: Modern UI library with hooks
+- **Vite 5.0**: Fast build tool and dev server
+- **Context API**: Global state management
+- **Socket.IO Client**: Real-time communication
+- **CSS3**: Modern styling (Flexbox, Grid, Custom Properties, Animations)
+- **PWA**: Service Worker, Web App Manifest
 
-### Backend (새로 추가)
-- Node.js - 서버 런타임
-- Express 4.18 - 웹 프레임워크
-- MongoDB - NoSQL 데이터베이스
-- Mongoose 8.0 - ODM
-- Socket.IO 4.6 - 실시간 통신
-- JWT - 토큰 기반 인증
-- Passport.js - OAuth 소셜 로그인
-- Cloudinary - 이미지 CDN
-- Multer - 파일 업로드
-- Helmet - 보안 헤더
-- Express Rate Limit - API 요청 제한
-  
+### Backend
+- **Node.js & Express**: RESTful API server
+- **MongoDB & Mongoose**: NoSQL database with ODM
+- **Socket.IO**: Real-time bidirectional communication
+- **Passport.js**: OAuth authentication (Google, GitHub)
+- **bcryptjs**: Password hashing
+- **JWT**: JSON Web Tokens for session management
+- **Multer**: File upload handling
+- **Cloudinary**: Cloud-based image storage
+- **Nodemailer**: Email service for password reset
+- **Helmet**: Security headers
+- **Express Rate Limit**: API rate limiting
 
-## 💡 향후 계획
-- [ ] 관리자 패널
+## 🚀 Getting Started
 
-## 📝 라이선스
+### Prerequisites
+- Node.js 16+ and npm
+- MongoDB instance (local or cloud)
+- Cloudinary account (for image uploads)
+- Google OAuth credentials (optional)
+- GitHub OAuth credentials (optional)
 
-MIT License
+### Installation
 
-## 👨‍💻 개발자
+1. **Clone the repository**
+```bash
+git clone <repository-url>
+cd SNS2
+```
 
-개인 포트폴리오 프로젝트
+2. **Install frontend dependencies**
+```bash
+npm install
+```
+
+3. **Install backend dependencies**
+```bash
+cd server
+npm install
+```
+
+4. **Configure environment variables**
+
+Create `server/.env` file:
+```env
+# Database
+MONGODB_URI=mongodb://localhost:27017/community-board
+
+# Server
+PORT=5000
+NODE_ENV=development
+
+# Session
+SESSION_SECRET=your-secret-key-here
+
+# JWT
+JWT_SECRET=your-jwt-secret-here
+
+# Cloudinary
+CLOUDINARY_CLOUD_NAME=your-cloud-name
+CLOUDINARY_API_KEY=your-api-key
+CLOUDINARY_API_SECRET=your-api-secret
+
+# OAuth (Optional)
+GOOGLE_CLIENT_ID=your-google-client-id
+GOOGLE_CLIENT_SECRET=your-google-client-secret
+GITHUB_CLIENT_ID=your-github-client-id
+GITHUB_CLIENT_SECRET=your-github-client-secret
+
+# Email (Optional)
+EMAIL_USER=your-email@gmail.com
+EMAIL_PASS=your-app-password
+
+# URLs
+CLIENT_URL=http://localhost:5173
+SERVER_URL=http://localhost:5000
+```
+
+5. **Start development servers**
+
+Option A - Run both servers simultaneously:
+```bash
+npm run dev:all
+```
+
+Option B - Run servers in separate terminals:
+```bash
+# Terminal 1 - Backend
+cd server
+npm run dev
+
+# Terminal 2 - Frontend
+npm run dev
+```
+
+6. **Access the application**
+- Frontend: http://localhost:5173
+- Backend API: http://localhost:5000
+
+## 📖 Usage Guide
+
+### Registration & Login
+1. **Register**: Click "Register" → Enter username (3-20 chars), email, and strong password
+2. **Login**: Enter username/email and password → Check "Remember Me" for persistent session
+3. **OAuth**: Click Google/GitHub button for quick authentication
+
+### Creating Posts
+1. Select a category (Comics, Games, Movies, Books, Music, Sports)
+2. Click "Create Post" button
+3. Enter title and content
+4. Optionally attach images/videos or insert inline images
+5. Click "Submit"
+
+### Searching & Filtering
+- **Search Types**: Title, Title+Content, Comments, Author
+- **Related Posts**: Find other posts in the same category
+- **Pagination**: Display 10-50 posts per page
+
+### Activity Dashboard
+1. Click "My Activity" in header
+2. View your posts, commented posts, liked posts, and bookmarks
+
+### Messaging
+1. Click on a username to view profile
+2. Send direct messages to other users
+3. Receive real-time message notifications
+
+## 🎯 Key Features Highlight
+
+### Advanced Search System
+- 4 search types (Title / Title+Content / Comments / Author)
+- Search across entire board (not just displayed items)
+- Dynamic placeholders and empty result messages
+- Real-time search with instant results
+
+### Sophisticated Comment System
+- Two-level nested comments (comments + replies)
+- Comment-based post search
+- Author-only deletion rights
+- Real-time comment updates via Socket.IO
+
+### Robust Authentication
+- Username or email login
+- Strong password validation (8+ chars, uppercase, lowercase, number, special char)
+- Rate limiting (5 attempts/minute)
+- OAuth integration with Google and GitHub
+- Email-based account recovery
+- Automatic session timeout after 60 minutes
+
+### File Upload Management
+- Image auto-resizing for optimal performance
+- Video upload support
+- Inline image insertion in post content
+- Cloudinary integration for scalable storage
+- File type and size validation
+
+### Real-time Features
+- Live notifications for new posts and comments
+- Instant messaging between users
+- Real-time like/bookmark updates
+- Socket.IO powered event system
+
+### Security Implementation
+- XSS prevention with HTML sanitization
+- bcrypt password hashing
+- JWT-based authentication
+- Helmet.js security headers
+- Rate limiting on sensitive endpoints
+- Input validation and sanitization
+- Secure session management
+
+## 🏛️ Architecture
+
+### Frontend Architecture
+- **Component-based**: Modular React components
+- **Context API**: Centralized state management (Auth, Theme)
+- **Service Layer**: Abstracted API calls in `services/api.js`
+- **Utility Functions**: Reusable helpers in `utils/`
+- **CSS Variables**: Theme switching with CSS custom properties
+
+### Backend Architecture
+- **RESTful API**: Standard HTTP methods for CRUD operations
+- **MVC Pattern**: Models, Routes, Middleware separation
+- **Mongoose ODM**: MongoDB object modeling
+- **Middleware Stack**: Authentication, validation, error handling
+- **Socket.IO**: WebSocket server for real-time features
+
+### Data Models
+
+**User Model**:
+- Username, email, password (hashed)
+- Profile information
+- Created posts, comments, likes, bookmarks
+- OAuth provider data
+- Session management
+
+**Post Model**:
+- Title, content, category
+- Author reference
+- Media attachments (images, videos)
+- Comments (embedded or referenced)
+- Likes, views, bookmarks counts
+- Timestamps
+
+## 📡 API Endpoints
+
+### Authentication
+- `POST /api/auth/register` - Register new user
+- `POST /api/auth/login` - Login user
+- `POST /api/auth/logout` - Logout user
+- `GET /api/auth/me` - Get current user
+- `GET /api/auth/google` - Google OAuth
+- `GET /api/auth/github` - GitHub OAuth
+
+### Posts
+- `GET /api/posts` - Get all posts (with pagination, search)
+- `GET /api/posts/:id` - Get single post
+- `POST /api/posts` - Create new post
+- `PUT /api/posts/:id` - Update post
+- `DELETE /api/posts/:id` - Delete post
+- `POST /api/posts/:id/like` - Like/unlike post
+- `POST /api/posts/:id/bookmark` - Bookmark/unbookmark post
+
+### Comments
+- `GET /api/posts/:postId/comments` - Get post comments
+- `POST /api/posts/:postId/comments` - Add comment
+- `DELETE /api/comments/:id` - Delete comment
+
+### Users
+- `GET /api/users/:id` - Get user profile
+- `PUT /api/users/:id` - Update user profile
+- `DELETE /api/users/:id` - Delete user account
+- `GET /api/users/:id/posts` - Get user's posts
+- `GET /api/users/:id/activity` - Get user's activity
+
+### Upload
+- `POST /api/upload/image` - Upload image
+- `POST /api/upload/video` - Upload video
+
+### Email
+- `POST /api/email/find-username` - Find username by email
+- `POST /api/email/reset-password` - Request password reset
+- `POST /api/email/verify-reset` - Verify reset token
+
+## 🔧 Development
+
+### Available Scripts
+
+**Frontend:**
+- `npm run dev` - Start Vite dev server (port 5173)
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+
+**Backend:**
+- `npm run dev` - Start backend with nodemon (port 5000)
+- `npm start` - Start backend in production mode
+
+**Combined:**
+- `npm run dev:all` - Start both frontend and backend concurrently
+
+### Code Structure Best Practices
+- **Components**: One component per file, named exports
+- **Hooks**: Extract complex logic into custom hooks
+- **API Calls**: Centralized in `services/api.js`
+- **Security**: Always sanitize user input, validate on both client and server
+- **Error Handling**: Try-catch blocks with user-friendly error messages
+
+### Environment Configuration
+All sensitive configuration should be in `.env` file (not committed to git):
+- Database credentials
+- API keys (Cloudinary, OAuth)
+- Session secrets
+- Email credentials
+
+## 🐛 Troubleshooting
+
+### Common Issues
+
+**MongoDB Connection Error:**
+- Ensure MongoDB is running locally or check cloud database credentials
+- Verify `MONGODB_URI` in `.env`
+
+**OAuth Not Working:**
+- Check OAuth credentials in Google/GitHub developer console
+- Verify redirect URLs match `CLIENT_URL` and `SERVER_URL`
+- Ensure callback URLs are properly configured
+
+**Image Upload Failing:**
+- Verify Cloudinary credentials
+- Check file size limits (default: 5MB for images, 50MB for videos)
+- Ensure file type is allowed (JPEG, PNG, GIF, MP4, WebM)
+
+**Session/Authentication Issues:**
+- Clear browser cookies and localStorage
+- Check `SESSION_SECRET` and `JWT_SECRET` are set
+- Verify CORS settings allow credentials
+
+## 🚀 Deployment
+
+### Frontend Deployment (Vercel/Netlify)
+1. Build the project: `npm run build`
+2. Deploy the `dist` folder
+3. Set environment variables for API URL
+
+### Backend Deployment (Heroku/Railway/DigitalOcean)
+1. Set all environment variables
+2. Ensure MongoDB connection string is for production database
+3. Set `NODE_ENV=production`
+4. Configure allowed origins for CORS
+
+### Environment Variables for Production
+```env
+NODE_ENV=production
+MONGODB_URI=<production-mongodb-uri>
+CLIENT_URL=<production-frontend-url>
+SERVER_URL=<production-backend-url>
+```
+
+## 📝 License
+
+This project is licensed under the MIT License.
+
+## 👨‍💻 Author
+
+Created as a portfolio project demonstrating full-stack development skills with modern web technologies.
+
+## 🙏 Acknowledgments
+
+- React team for the amazing library
+- MongoDB for the flexible database
+- Socket.IO for real-time capabilities
+- Cloudinary for media management
+- All open-source contributors
 
 ---
 
-**Made with ❤️ using React & Vite**
+**Note**: This is a portfolio project for demonstration purposes. For production use, ensure proper security audits, performance optimization, and comprehensive testing.
 
 
