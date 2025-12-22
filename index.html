@@ -3,10 +3,30 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>React CRUD 게시판</title>
+    <meta name="description" content="다양한 주제의 커뮤니티 게시판 - 만화, 게임, 영화, 책, 음악, 스포츠" />
+    <meta name="theme-color" content="#667eea" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/icon-192x192.png" />
+    <link rel="icon" type="image/png" sizes="512x512" href="/icon-512x512.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="apple-touch-icon" href="/icon-192x192.png" />
+    <title>Community Board - 커뮤니티 게시판</title>
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+    <script>
+      // 서비스 워커 등록
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/service-worker.js')
+            .then((registration) => {
+              console.log('ServiceWorker 등록 성공:', registration.scope);
+            })
+            .catch((error) => {
+              console.log('ServiceWorker 등록 실패:', error);
+            });
+        });
+      }
+    </script>
   </body>
 </html>

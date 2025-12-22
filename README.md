@@ -1,4 +1,4 @@
-# React 커뮤니티 게시판
+# React 커뮤니티 게시판 (SNS2)
 
 React와 Vite로 구현한 테마별 커뮤니티 게시판 애플리케이션입니다.
 
@@ -200,14 +200,143 @@ npm run build
 - 멀티 브라우저 간 데이터 동기화 불가
 - 실시간 알림 기능 없음 (새로고침 필요)
 
-## 💡 향후 개선 방향
+## 💡 최근 구현된 기능
 
-- 백엔드 API 연동
-- WebSocket 기반 실시간 알림
-- 이미지 서버 분리 및 CDN 사용
-- 다크 모드
-- 모바일 앱 버전
-- 소셜 로그인 (Google, GitHub 등)
+### ✅ 다크 모드 (완료)
+- 🌓 라이트/다크 테마 전환
+- 💾 LocalStorage에 설정 자동 저장
+- 🎨 30+ CSS 변수를 이용한 완전한 테마 시스템
+- 🔘 오른쪽 하단 플로팅 버튼으로 토글
+
+### ✅ PWA (Progressive Web App) 지원 (완료)
+- 📱 홈 화면 추가 가능
+- 🔄 서비스 워커로 오프라인 캐싱
+- 📲 푸시 알림 준비
+- 🚀 게시판별 바로가기 (Shortcuts)
+
+### 🔄 백엔드 API 서버 (구현 중)
+- ⚙️ Node.js + Express 구조 완성
+- 🔌 Socket.IO 실시간 통신 준비
+- 🗄️ MongoDB + Mongoose 데이터 모델
+- 🔐 JWT 인증 시스템 (구현 예정)
+- 🛡️ Helmet 보안, Rate Limiting 적용
+
+### 🔄 WebSocket 실시간 기능 (구현 중)
+- 🔴 Socket.IO 서버 설정 완료
+- 📡 실시간 알림 이벤트 정의
+- 💬 실시간 댓글 업데이트 준비
+- 📢 게시글 작성 알림 준비
+
+### 🔄 이미지 CDN (준비 중)
+- ☁️ Cloudinary 설정 완료
+- 📤 Multer 파일 업로드 준비
+- 🖼️ 이미지 최적화 및 리사이징
+
+### 🔄 소셜 로그인 (준비 중)
+- 🔑 Passport.js 설치 완료
+- 🌐 Google OAuth 준비
+- 🐙 GitHub OAuth 준비
+
+## 🛠️ 기술 스택 (업데이트)
+
+### Frontend
+- React 18.2 - UI 라이브러리
+- Vite 5.0 - 빌드 도구
+- Context API - 전역 상태 관리 (Auth, Theme)
+- CSS Variables - 동적 테마 시스템
+- Service Worker - PWA 오프라인 지원
+
+### Backend (새로 추가)
+- Node.js - 서버 런타임
+- Express 4.18 - 웹 프레임워크
+- MongoDB - NoSQL 데이터베이스
+- Mongoose 8.0 - ODM
+- Socket.IO 4.6 - 실시간 통신
+- JWT - 토큰 기반 인증
+- Passport.js - OAuth 소셜 로그인
+- Cloudinary - 이미지 CDN
+- Multer - 파일 업로드
+- Helmet - 보안 헤더
+- Express Rate Limit - API 요청 제한
+
+## 📦 새로운 파일 구조
+
+```
+SNS2/
+├── public/
+│   ├── manifest.json          # PWA 설정
+│   └── service-worker.js      # 서비스 워커
+├── src/
+│   ├── context/
+│   │   ├── AuthContext.jsx    # 인증 상태
+│   │   └── ThemeContext.jsx   # 테마 상태 (NEW)
+│   └── styles/
+│       └── themes.css         # 테마 CSS 변수 (NEW)
+└── server/                    # 백엔드 서버 (NEW)
+    ├── package.json
+    ├── .env.example
+    ├── server.js              # Express + Socket.IO
+    ├── models/
+    │   ├── User.js            # 사용자 모델
+    │   └── Post.js            # 게시글 모델
+    ├── routes/                # API 라우트 (구현 예정)
+    │   ├── auth.js
+    │   ├── posts.js
+    │   ├── comments.js
+    │   ├── users.js
+    │   └── upload.js
+    ├── middleware/            # 미들웨어 (구현 예정)
+    │   └── auth.js
+    └── config/                # 설정 (구현 예정)
+        └── passport.js
+```
+
+## 🚀 설치 및 실행 (업데이트)
+
+### Frontend
+```bash
+# 의존성 설치
+npm install
+
+# 개발 서버 실행
+npm run dev
+
+# http://localhost:5173
+```
+
+### Backend (선택사항)
+```bash
+# server 폴더로 이동
+cd server
+
+# 의존성 설치
+npm install
+
+# 환경 변수 설정
+# .env.example을 .env로 복사하고 설정
+
+# MongoDB 시작 (별도 터미널)
+mongod
+
+# 서버 실행
+npm run dev
+
+# http://localhost:5000
+```
+
+자세한 백엔드 설정은 [server/SETUP.md](server/SETUP.md)를 참고하세요.
+
+## 💡 향후 계획
+
+- [ ] 백엔드 API 라우트 구현
+- [ ] JWT 인증 미들웨어
+- [ ] Passport OAuth 전략 구현
+- [ ] Cloudinary 이미지 업로드
+- [ ] Frontend-Backend 연결
+- [ ] Socket.IO 클라이언트 통합
+- [ ] PWA 아이콘 이미지 생성
+- [ ] 무한 스크롤
+- [ ] 관리자 패널
 
 ## 📝 라이선스
 
@@ -220,4 +349,3 @@ MIT License
 ---
 
 **Made with ❤️ using React & Vite**
-
