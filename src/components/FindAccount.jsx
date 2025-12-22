@@ -9,6 +9,72 @@ function FindAccount({ onFindAccount, onResetPassword, onSwitchToLogin }) {
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const [foundUsername, setFoundUsername] = useState('');
+  const [verificationCode, setVerificationCode] = useState('');
+  const [codeSent, setCodeSent] = useState(false);
+  const [codeVerified, setCodeVerified] = useState(false);
+  const [sendingCode, setSendingCode] = useState(false);
+
+  const sendVerificationCode = async () => {
+    if (!email.trim()) {
+      setError('이메일을 입력하세요.');
+      return;
+    }
+    if (!email.includes('@')) {
+      setError('유효한 이메일 주소를 입력하세요.');
+      return;
+    }
+
+    setSendingCode(true);
+    setError('');
+
+    try {
+      const response = await fetch('http://localhost:5000/api/email/send-verification', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setCodeSent(true);
+        setMessage(data.message + (data.devCode ? ` (개발 모드 코드: ${data.devCode})` : ''));
+      } else {
+        setError(data.error || '인증 코드 전송에 실패했습니다.');
+      }
+    } catch (err) {
+      setError('서버와 통신할 수 없습니다.');
+    } finally {
+      setSendingCode(false);
+    }
+  };
+
+  const verifyCode = async () => {
+    if (!verificationCode.trim()) {
+      setError('인증 코드를 입력하세요.');
+      return;
+    }
+
+    try {
+      const response = await fetch('http://localhost:5000/api/email/verify-code', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, code: verificationCode })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setCodeVerified(true);
+        setMessage(data.message);
+        setError('');
+      } else {
+        setError(data.error || '인증에 실패했습니다.');
+      }
+    } catch (err) {
+      setError('서버와 통신할 수 없습니다.');
+    }
+  };
 
   const handleFindAccount = (e) => {
     e.preventDefault();
@@ -42,6 +108,10 @@ function FindAccount({ onFindAccount, onResetPassword, onSwitchToLogin }) {
       setError('이메일을 입력하세요.');
       return;
     }
+    if (!codeVerified) {
+      setError('이메일 인증을 먼저 완료해주세요.');
+      return;
+    }
     if (!newPassword) {
       setError('새 비밀번호를 입력하세요.');
       return;
@@ -61,6 +131,9 @@ function FindAccount({ onFindAccount, onResetPassword, onSwitchToLogin }) {
       setEmail('');
       setNewPassword('');
       setConfirmPassword('');
+      setCodeSent(false);
+      setCodeVerified(false);
+      setVerificationCode('');
     } catch (err) {
       setError(err.message);
     }
@@ -115,14 +188,54 @@ function FindAccount({ onFindAccount, onResetPassword, onSwitchToLogin }) {
           <form onSubmit={handleResetPassword}>
             <div className="form-group">
               <label htmlFor="email">이메일</label>
-              <input
-                type="email"
-                id="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="가입 시 사용한 이메일을 입력하세요"
-              />
+              <div className="input-with-button">
+                <input
+                  type="email"
+                  id="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="가입 시 사용한 이메일을 입력하세요"
+                  disabled={codeVerified}
+                />
+                <button 
+                  type="button" 
+                  className="btn-check"
+                  onClick={sendVerificationCode}
+                  disabled={!email || sendingCode || codeVerified}
+                >
+                  {sendingCode ? '전송중...' : codeVerified ? '인증완료' : '인증코드'}
+                </button>
+              </div>
+              {codeVerified && (
+                <div className="check-message success">✓ 이메일 인증이 완료되었습니다</div>
+              )}
             </div>
+
+            {codeSent && !codeVerified && (
+              <div className="form-group">
+                <label htmlFor="verificationCode">인증 코드</label>
+                <div className="input-with-button">
+                  <input
+                    type="text"
+                    id="verificationCode"
+                    value={verificationCode}
+                    onChange={(e) => setVerificationCode(e.target.value)}
+                    placeholder="6자리 인증 코드 입력"
+                    maxLength={6}
+                  />
+                  <button 
+                    type="button" 
+                    className="btn-check"
+                    onClick={verifyCode}
+                    disabled={!verificationCode}
+                  >
+                    확인
+                  </button>
+                </div>
+                <div className="check-message info">📧 이메일로 전송된 6자리 코드를 입력하세요 (5분간 유효)</div>
+              </div>
+            )}
+
             <div className="form-group">
               <label htmlFor="newPassword">새 비밀번호</label>
               <input
@@ -131,6 +244,7 @@ function FindAccount({ onFindAccount, onResetPassword, onSwitchToLogin }) {
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 placeholder="새 비밀번호를 입력하세요"
+                disabled={!codeVerified}
               />
             </div>
             <div className="form-group">
@@ -141,9 +255,10 @@ function FindAccount({ onFindAccount, onResetPassword, onSwitchToLogin }) {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="비밀번호를 다시 입력하세요"
+                disabled={!codeVerified}
               />
             </div>
-            <button type="submit" className="btn-submit">비밀번호 재설정</button>
+            <button type="submit" className="btn-submit" disabled={!codeVerified}>비밀번호 재설정</button>
           </form>
         )}
 

@@ -6,7 +6,7 @@ function Header({ currentUser, onLogout, onOpenProfile, onHome, onGoToMyActivity
     <header className="app-header">
       <div className="header-content">
         <h1 className="logo" onClick={onHome} style={{ cursor: 'pointer' }}>
-          📝 Community Board
+          Inside Life
         </h1>
         {currentUser && (
           <div className="user-info">

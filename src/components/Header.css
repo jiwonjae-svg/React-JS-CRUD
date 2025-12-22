@@ -95,3 +95,49 @@
     width: 100%;
   }
 }
+
+/* 다크 모드 */
+[data-theme="dark"] .app-header {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="dark"] .logo {
+  color: #e4e4e4;
+}
+
+[data-theme="dark"] .welcome {
+  color: #b8b8b8;
+}
+
+[data-theme="dark"] .welcome strong {
+  color: #e4e4e4;
+}
+
+[data-theme="dark"] .btn-logout {
+  background: rgba(255, 255, 255, 0.1);
+  color: #e4e4e4;
+  border-color: #667eea;
+}
+
+[data-theme="dark"] .btn-logout:hover {
+  background: #667eea;
+  color: white;
+  border-color: #667eea;
+}
+
+[data-theme="dark"] .btn-profile,
+[data-theme="dark"] .btn-myactivity,
+[data-theme="dark"] .btn-message {
+  background: rgba(102, 126, 234, 0.2);
+  color: #88a0ff;
+  border: 1px solid #667eea;
+}
+
+[data-theme="dark"] .btn-profile:hover,
+[data-theme="dark"] .btn-myactivity:hover,
+[data-theme="dark"] .btn-message:hover {
+  background: #667eea;
+  color: white;
+  box-shadow: 0 3px 10px rgba(102, 126, 234, 0.4);
+}

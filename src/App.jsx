@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { ThemeProvider, useTheme } from './context/ThemeContext';
 import Login from './components/Login';
 import Register from './components/Register';
 import FindAccount from './components/FindAccount';
@@ -120,6 +121,7 @@ const allInitialPosts = [...initialPosts, ...generateMorePosts(31)];
 
 function MainApp() {
   const { currentUser, login, register, logout, findAccount, resetPassword } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const [authView, setAuthView] = useState('main'); // 'main', 'login', 'register', 'find'
   const [posts, setPosts] = useState([]);
   const [currentView, setCurrentView] = useState('home'); // 'home', 'board', 'detail', 'create', 'edit', 'myactivity'
@@ -622,19 +624,19 @@ function MainApp() {
   };
 
   // 인증 핸들러
-  const handleLogin = (username, password, rememberMe) => {
+  const handleLogin = async (username, password, rememberMe) => {
     try {
-      login(username, password, rememberMe);
+      await login(username, password);
     } catch (err) {
       throw err;
     }
   };
 
-  const handleRegister = (userData) => {
+  const handleRegister = async (userData) => {
     try {
-      const newUser = register(userData);
-      alert('회원가입이 완료되었습니다. 로그인해주세요.');
-      setAuthView('login');
+      await register(userData.username, userData.email, userData.password, userData.username);
+      alert('회원가입이 완료되었습니다!');
+      // 회원가입 후 자동 로그인됨
     } catch (err) {
       throw err;
     }
@@ -843,15 +845,22 @@ function MainApp() {
           onClick={handleNotificationClick}
         />
       )}
+
+      {/* 다크 모드 토글 버튼 */}
+      <button className="theme-toggle" onClick={toggleTheme} title={`${theme === 'light' ? '다크' : '라이트'} 모드로 전환`}>
+        {theme === 'light' ? '🌙' : '☀️'}
+      </button>
     </div>
   );
 }
 
 function App() {
   return (
-    <AuthProvider>
-      <MainApp />
-    </AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <MainApp />
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
 

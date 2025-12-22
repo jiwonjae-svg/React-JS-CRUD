@@ -273,3 +273,111 @@
     font-size: 24px;
   }
 }
+
+/* 다크 모드 */
+[data-theme="dark"] .home-title {
+  background: linear-gradient(135deg, #88a0ff 0%, #a88beb 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+[data-theme="dark"] .board-search-input {
+  background: #1a1a2e;
+  border-color: #2a2a3e;
+  color: #e4e4e4;
+}
+
+[data-theme="dark"] .board-search-input:focus {
+  border-color: #667eea;
+}
+
+[data-theme="dark"] .board-search-input::placeholder {
+  color: #666;
+}
+
+[data-theme="dark"] .btn-clear-board-search {
+  color: #666;
+}
+
+[data-theme="dark"] .btn-clear-board-search:hover {
+  background-color: #2a2a3e;
+  color: #b8b8b8;
+}
+
+[data-theme="dark"] .recent-boards-section {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="dark"] .recent-boards-section h3 {
+  color: #e4e4e4;
+}
+
+[data-theme="dark"] .recent-board-item {
+  background: #0f3460;
+  border-color: #2a2a3e;
+}
+
+[data-theme="dark"] .recent-board-item:hover {
+  border-color: #667eea;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+[data-theme="dark"] .recent-board-name {
+  color: #e4e4e4;
+}
+
+[data-theme="dark"] .btn-remove-recent {
+  color: #666;
+}
+
+[data-theme="dark"] .btn-remove-recent:hover {
+  background: #5a1a1a;
+  color: #ff6b6b;
+}
+
+[data-theme="dark"] .no-boards-message {
+  color: #666;
+}
+
+[data-theme="dark"] .board-card {
+  background: #0f3460;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="dark"] .board-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.7);
+}
+
+[data-theme="dark"] .board-header {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+}
+
+[data-theme="dark"] .board-header:hover {
+  background: linear-gradient(135deg, #252539 0%, #1e2a45 100%);
+}
+
+[data-theme="dark"] .board-name {
+  color: #e4e4e4;
+}
+
+[data-theme="dark"] .board-posts li {
+  border-bottom-color: #2a2a3e;
+}
+
+[data-theme="dark"] .board-posts li:hover {
+  background: #1a1a2e;
+}
+
+[data-theme="dark"] .post-title {
+  color: #e4e4e4;
+}
+
+[data-theme="dark"] .post-meta {
+  color: #666;
+}
+
+[data-theme="dark"] .no-posts {
+  color: #666;
+}

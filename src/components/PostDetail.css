@@ -620,3 +620,119 @@
     width: 100%;
   }
 }
+
+/* 다크 모드 */
+[data-theme="dark"] .detail-header h2 {
+  color: #e4e4e4;
+}
+
+[data-theme="dark"] .detail-info,
+[data-theme="dark"] .detail-info span,
+[data-theme="dark"] .detail-stats span {
+  color: #888;
+}
+
+[data-theme="dark"] .badge-category {
+  background: #667eea;
+  color: white;
+}
+
+[data-theme="dark"] .detail-content {
+  color: #e4e4e4;
+  border-top-color: #2a2a3e;
+  border-bottom-color: #2a2a3e;
+}
+
+[data-theme="dark"] .btn-like {
+  background: #1a1a2e;
+  border-color: #2a2a3e;
+  color: #e4e4e4;
+}
+
+[data-theme="dark"] .btn-like:hover {
+  border-color: #667eea;
+  background: #252539;
+}
+
+[data-theme="dark"] .btn-like.liked {
+  background: #e74c3c;
+  border-color: #e74c3c;
+  color: white;
+}
+
+[data-theme="dark"] .btn-scrap {
+  background: #1a1a2e;
+  border-color: #2a2a3e;
+  color: #e4e4e4;
+}
+
+[data-theme="dark"] .btn-scrap:hover {
+  border-color: #667eea;
+  background: #252539;
+}
+
+[data-theme="dark"] .btn-scrap.scrapped {
+  background: #f39c12;
+  border-color: #f39c12;
+  color: white;
+}
+
+[data-theme="dark"] .btn-edit,
+[data-theme="dark"] .btn-delete {
+  background: #2a2a3e;
+  color: #e4e4e4;
+}
+
+[data-theme="dark"] .btn-edit:hover {
+  background: #3a3a4e;
+}
+
+[data-theme="dark"] .btn-delete:hover {
+  background: #5a1a1a;
+  color: #ff6b6b;
+}
+
+[data-theme="dark"] .comments-section h3 {
+  color: #e4e4e4;
+  border-bottom-color: #2a2a3e;
+}
+
+[data-theme="dark"] .comment-form textarea {
+  background: #1a1a2e;
+  border-color: #2a2a3e;
+  color: #e4e4e4;
+}
+
+[data-theme="dark"] .comment-form textarea::placeholder {
+  color: #666;
+}
+
+[data-theme="dark"] .comment {
+  border-bottom-color: #2a2a3e;
+}
+
+[data-theme="dark"] .comment-author {
+  color: #e4e4e4;
+}
+
+[data-theme="dark"] .comment-date,
+[data-theme="dark"] .comment-meta {
+  color: #666;
+}
+
+[data-theme="dark"] .comment-content {
+  color: #b8b8b8;
+}
+
+[data-theme="dark"] .reply {
+  background: #1a1a2e;
+  border-left-color: #667eea;
+}
+
+[data-theme="dark"] .reply-author {
+  color: #e4e4e4;
+}
+
+[data-theme="dark"] .reply-content {
+  color: #b8b8b8;
+}

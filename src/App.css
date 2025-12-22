@@ -3,6 +3,57 @@
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
+/* 다크 모드 전역 스타일 */
+[data-theme="dark"] .app {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+}
+
+[data-theme="dark"] .guest-banner {
+  background: rgba(15, 52, 96, 0.95);
+  color: #e4e4e4;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="dark"] .container {
+  background: #0f3460;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  color: #e4e4e4;
+}
+
+[data-theme="dark"] .container h1,
+[data-theme="dark"] .container h2,
+[data-theme="dark"] .container h3,
+[data-theme="dark"] .container h4,
+[data-theme="dark"] .container h5,
+[data-theme="dark"] .container h6 {
+  color: #e4e4e4;
+}
+
+[data-theme="dark"] .container p,
+[data-theme="dark"] .container span,
+[data-theme="dark"] .container div {
+  color: #b8b8b8;
+}
+
+[data-theme="dark"] input,
+[data-theme="dark"] textarea,
+[data-theme="dark"] select {
+  background: #1a1a2e;
+  border-color: #2a2a3e;
+  color: #e4e4e4;
+}
+
+[data-theme="dark"] input::placeholder,
+[data-theme="dark"] textarea::placeholder {
+  color: #666;
+}
+
+[data-theme="dark"] button:not(.btn-submit):not(.btn-oauth):not(.btn-check) {
+  background: #1a1a2e;
+  border-color: #2a2a3e;
+  color: #e4e4e4;
+}
+
 .guest-banner {
   background: rgba(255, 255, 255, 0.95);
   padding: 12px 20px;

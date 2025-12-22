@@ -330,3 +330,49 @@ form {
     width: 100%;
   }
 }
+
+/* 다크 모드 */
+[data-theme="dark"] .post-form-container h2 {
+  color: #e4e4e4;
+}
+
+[data-theme="dark"] .form-group label {
+  color: #b8b8b8;
+}
+
+[data-theme="dark"] .form-group input,
+[data-theme="dark"] .form-group select,
+[data-theme="dark"] .form-group textarea {
+  background: #1a1a2e;
+  border-color: #2a2a3e;
+  color: #e4e4e4;
+}
+
+[data-theme="dark"] .form-group input::placeholder,
+[data-theme="dark"] .form-group textarea::placeholder {
+  color: #666;
+}
+
+[data-theme="dark"] .form-group input:focus,
+[data-theme="dark"] .form-group select:focus,
+[data-theme="dark"] .form-group textarea:focus {
+  border-color: #667eea;
+}
+
+[data-theme="dark"] .char-count {
+  color: #666;
+}
+
+[data-theme="dark"] .media-preview {
+  background: #1a1a2e;
+  border-color: #2a2a3e;
+}
+
+[data-theme="dark"] .btn-cancel {
+  background: #2a2a3e;
+  color: #e4e4e4;
+}
+
+[data-theme="dark"] .btn-cancel:hover {
+  background: #3a3a4e;
+}

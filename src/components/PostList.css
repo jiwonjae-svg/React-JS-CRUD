@@ -393,3 +393,123 @@
     font-size: 14px;
   }
 }
+
+/* 다크 모드 */
+[data-theme="dark"] .header h1 {
+  color: #e4e4e4;
+}
+
+[data-theme="dark"] .btn-back {
+  background: #2a2a3e;
+  color: #e4e4e4;
+}
+
+[data-theme="dark"] .btn-back:hover {
+  background: #3a3a4e;
+}
+
+[data-theme="dark"] .btn-favorite {
+  background: #1a1a2e;
+  border-color: #f39c12;
+  color: #f39c12;
+}
+
+[data-theme="dark"] .btn-favorite.favorited {
+  background: #f39c12;
+  color: #1a1a2e;
+}
+
+[data-theme="dark"] .search-type-select {
+  background: #1a1a2e;
+  border-color: #2a2a3e;
+  color: #e4e4e4;
+}
+
+[data-theme="dark"] .search-input {
+  background: #1a1a2e;
+  border-color: #2a2a3e;
+  color: #e4e4e4;
+}
+
+[data-theme="dark"] .search-input::placeholder {
+  color: #666;
+}
+
+[data-theme="dark"] .btn-clear-search {
+  color: #666;
+}
+
+[data-theme="dark"] .btn-clear-search:hover {
+  background-color: #2a2a3e;
+  color: #b8b8b8;
+}
+
+[data-theme="dark"] .empty-message {
+  color: #666;
+}
+
+[data-theme="dark"] .empty-message p {
+  color: #666;
+}
+
+[data-theme="dark"] .post-table {
+  background: #0f3460;
+}
+
+[data-theme="dark"] .post-table thead {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+}
+
+[data-theme="dark"] .post-table th {
+  color: #e4e4e4;
+  border-bottom-color: #2a2a3e;
+}
+
+[data-theme="dark"] .post-table tbody tr {
+  border-bottom-color: #2a2a3e;
+}
+
+[data-theme="dark"] .post-table tbody tr:hover {
+  background: #1a1a2e;
+}
+
+[data-theme="dark"] .post-table td {
+  color: #b8b8b8;
+}
+
+[data-theme="dark"] .post-table .post-title {
+  color: #e4e4e4;
+}
+
+[data-theme="dark"] .post-table .post-author,
+[data-theme="dark"] .post-table .post-date {
+  color: #888;
+}
+
+[data-theme="dark"] .post-table .badge-notice {
+  background: #667eea;
+  color: white;
+}
+
+[data-theme="dark"] .post-table .badge-hot {
+  background: #e74c3c;
+  color: white;
+}
+
+[data-theme="dark"] .pagination-btn {
+  background: #1a1a2e;
+  border-color: #2a2a3e;
+  color: #b8b8b8;
+}
+
+[data-theme="dark"] .pagination-btn:hover:not(:disabled) {
+  border-color: #667eea;
+  color: #88a0ff;
+  background: #252539;
+}
+
+[data-theme="dark"] .pagination-btn.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-color: #667eea;
+}
