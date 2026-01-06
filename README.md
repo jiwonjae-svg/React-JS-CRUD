@@ -236,50 +236,6 @@ npm run dev
 2. Send direct messages to other users
 3. Receive real-time message notifications
 
-## 🎯 Key Features Highlight
-
-### Advanced Search System
-- 4 search types (Title / Title+Content / Comments / Author)
-- Search across entire board (not just displayed items)
-- Dynamic placeholders and empty result messages
-- Real-time search with instant results
-
-### Sophisticated Comment System
-- Two-level nested comments (comments + replies)
-- Comment-based post search
-- Author-only deletion rights
-- Real-time comment updates via Socket.IO
-
-### Robust Authentication
-- Username or email login
-- Strong password validation (8+ chars, uppercase, lowercase, number, special char)
-- Rate limiting (5 attempts/minute)
-- OAuth integration with Google and GitHub
-- Email-based account recovery
-- Automatic session timeout after 60 minutes
-
-### File Upload Management
-- Image auto-resizing for optimal performance
-- Video upload support
-- Inline image insertion in post content
-- Cloudinary integration for scalable storage
-- File type and size validation
-
-### Real-time Features
-- Live notifications for new posts and comments
-- Instant messaging between users
-- Real-time like/bookmark updates
-- Socket.IO powered event system
-
-### Security Implementation
-- XSS prevention with HTML sanitization
-- bcrypt password hashing
-- JWT-based authentication
-- Helmet.js security headers
-- Rate limiting on sensitive endpoints
-- Input validation and sanitization
-- Secure session management
-
 ## 🏛️ Architecture
 
 ### Frontend Architecture
